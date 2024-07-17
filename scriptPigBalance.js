@@ -2,7 +2,7 @@
 const  transactionForm = document.getElementById('transaction-form');
 const descriptionInput = document.getElementById('descripcion');
 const amountInput = document.getElementById('amount');
-const transactionList = document.getElementById('transaction=list');
+const transactionList = document.getElementById('transaction-list');
 const balanceElement = document.getElementById('balance');
 
 //cargamos los datos (transacciones) alamacenadas en el local storage al cargar la pagina web
@@ -13,8 +13,8 @@ transactionForm.addEventListener('submit', function(event) {
     event.preventDefault();
 
     //obtenemos los valores de los input y creamos una nueva transaccion
-    const descripcion = descriptionInput.ariaValueMax.trim();
-    const amount = parseFloat(amountInput.ariaValueMax.trim());
+    const descripcion = descriptionInput.value.trim();
+    const amount = parseFloat(amountInput.value.trim());
     if (descripcion !== '' && !isNaN(amount)) { //si descricion no esta vacio y amount contiene un valor numero crea la transaccion
         addTransaction({descripcion, amount});
         descriptionInput.value = '';
@@ -25,7 +25,7 @@ transactionForm.addEventListener('submit', function(event) {
 //Funcion para añadir una nueva transaccion
 function addTransaction(transaction) {
     const li = document.createElement('li'); //creamos el elemento lista
-    li.textContent = `${transaction.descripcion}: $${transaction.amount.toFixed(2)}`; //añadimos datos al elemento li
+    li.textContent = `${transaction.descripcion}: $${transaction.amount.toFixed(0)}`; //añadimos datos al elemento li
 
     const deleteButton = document.createElement('button'); //creamos un boton eliminar por cada li creada
     deleteButton.textContent = 'Eliminar';
@@ -63,7 +63,7 @@ function getTransactionsFromLocalStorage() {
 function saveTransactionToLocalStorage(transaction) {
     const transactions = getTransactionsFromLocalStorage();
     transactions.push(transaction);
-    localStorage.setItem('transaction', JSON.stringify(transactions));
+    localStorage.setItem('transactions', JSON.stringify(transactions));
 }
 
 //Funcion para remover un elemento de transaccion del Local Storage
@@ -77,7 +77,7 @@ function removeTransactionFromLocalStorage(transactionToRemove) {
 function updateBalance() {
     const transactions = getTransactionsFromLocalStorage();
     const total = transactions.reduce((sum, transaction) => sum + transaction.amount, 0)
-    balanceElement.textContent = total.toFixed(2);
+    balanceElement.textContent = total;
 }
 
 
